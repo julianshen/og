@@ -79,16 +79,18 @@ type TwitterCard struct {
 }
 
 type PageInfo struct {
-	Title    string `meta:"og:title"`
-	Type     string `meta:"og:type"`
-	Url      string `meta:"og:url"`
-	Site     string `meta:"og:site"`
-	SiteName string `meta:"og:site_name"`
-	Images   []*OgImage
-	Videos   []*OgVideo
-	Audios   []*OgAudio
-	Twitter  *TwitterCard
-	Content  string
+	Title       string `meta:"og:title"`
+	Type        string `meta:"og:type"`
+	Url         string `meta:"og:url"`
+	Site        string `meta:"og:site"`
+	SiteName    string `meta:"og:site_name"`
+	Description string `meta:"og:description"`
+	Locale      string `meta:"og:locale"`
+	Images      []*OgImage
+	Videos      []*OgVideo
+	Audios      []*OgAudio
+	Twitter     *TwitterCard
+	Content     string
 }
 
 func GetPageDataFromUrl(urlStr string, data interface{}) error {
