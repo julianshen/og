@@ -23,69 +23,69 @@ var (
 )
 
 type OgImage struct {
-	Url       string `meta:"og:image,og:image:url"`
-	SecureUrl string `meta:"og:image:secure_url"`
-	Width     int    `meta:"og:image:width"`
-	Height    int    `meta:"og:image:height"`
-	Type      string `meta:"og:image:type"`
+	Url       string `meta:"og:image,og:image:url" json:"url,omitempty"`
+	SecureUrl string `meta:"og:image:secure_url" json:"secureURL,omitempty"`
+	Width     int    `meta:"og:image:width" json:"width,omitempty"`
+	Height    int    `meta:"og:image:height" json:"height,omitempty"`
+	Type      string `meta:"og:image:type" json:"type,omitempty"`
 }
 
 type OgVideo struct {
-	Url       string `meta:"og:video,og:video:url"`
-	SecureUrl string `meta:"og:video:secure_url"`
-	Width     int    `meta:"og:video:width"`
-	Height    int    `meta:"og:video:height"`
-	Type      string `meta:"og:video:type"`
+	Url       string `meta:"og:video,og:video:url" json:"url,omitempty"`
+	SecureUrl string `meta:"og:video:secure_url" json:"secureURL,omitempty"`
+	Width     int    `meta:"og:video:width" json:"width,omitempty"`
+	Height    int    `meta:"og:video:height" json:"height,omitempty"`
+	Type      string `meta:"og:video:type" json:"type,omitempty"`
 }
 
 type OgAudio struct {
-	Url       string `meta:"og:audio,og:audio:url"`
-	SecureUrl string `meta:"og:audio:secure_url"`
-	Type      string `meta:"og:audio:type"`
+	Url       string `meta:"og:audio,og:audio:url" json:"url,omitempty"`
+	SecureUrl string `meta:"og:audio:secure_url" json:"secureURL,omitempty"`
+	Type      string `meta:"og:audio:type" json:"type,omitempty"`
 }
 
 type TwitterCard struct {
-	Card        string `meta:"twitter:card"`
-	Site        string `meta:"twitter:site"`
-	SiteId      string `meta:"twitter:site:id"`
-	Creator     string `meta:"twitter:creator"`
-	CreatorId   string `meta:"twitter:creator:id"`
-	Description string `meta:"twitter:description"`
-	Title       string `meta:"twitter:title"`
-	Image       string `meta:"twitter:image,twitter:image:src"`
-	ImageAlt    string `meta:"twitter:image:alt"`
-	Url         string `meta:"twitter:url"`
+	Card        string `meta:"twitter:card" json:"card,omitempty"`
+	Site        string `meta:"twitter:site" json:"site,omitempty"`
+	SiteId      string `meta:"twitter:site:id" json:"siteID,omitempty"`
+	Creator     string `meta:"twitter:creator" json:"creator,omitempty"`
+	CreatorId   string `meta:"twitter:creator:id" json:"creatorID,omitempty"`
+	Description string `meta:"twitter:description" json:"description,omitempty"`
+	Title       string `meta:"twitter:title" json:"title,omitempty"`
+	Image       string `meta:"twitter:image,twitter:image:src" json:"image,omitempty"`
+	ImageAlt    string `meta:"twitter:image:alt" json:"imageAlt,omitempty"`
+	Url         string `meta:"twitter:url" json:"url,omitempty"`
 	Player      struct {
-		Url    string `meta:"twitter:player"`
-		Width  int    `meta:"twitter:width"`
-		Height int    `meta:"twitter:height"`
-		Stream string `meta:"twitter:stream"`
+		Url    string `meta:"twitter:player" json:"url,omitempty"`
+		Width  int    `meta:"twitter:width" json:"width,omitempty"`
+		Height int    `meta:"twitter:height" json:"height,omitempty"`
+		Stream string `meta:"twitter:stream" json:"stream,omitempty"`
 	}
 	IPhone struct {
-		Name string `meta:"twitter:app:name:iphone"`
-		Id   string `meta:"twitter:app:id:iphone"`
-		Url  string `meta:"twitter:app:url:iphone"`
+		Name string `meta:"twitter:app:name:iphone" json:"name,omitempty"`
+		Id   string `meta:"twitter:app:id:iphone" json:"id,omitempty"`
+		Url  string `meta:"twitter:app:url:iphone" json:"url,omitempty"`
 	}
 	IPad struct {
-		Name string `meta:"twitter:app:name:ipad"`
-		Id   string `meta:"twitter:app:id:ipad"`
-		Url  string `meta:"twitter:app:url:ipad"`
+		Name string `meta:"twitter:app:name:ipad" json:"name,omitempty"`
+		Id   string `meta:"twitter:app:id:ipad" json:"id,omitempty"`
+		Url  string `meta:"twitter:app:url:ipad" json:"url,omitempty"`
 	}
 	Googleplay struct {
-		Name string `meta:"twitter:app:name:googleplay"`
-		Id   string `meta:"twitter:app:id:googleplay"`
-		Url  string `meta:"twitter:app:url:googleplay"`
+		Name string `meta:"twitter:app:name:googleplay" json:"name,omitempty"`
+		Id   string `meta:"twitter:app:id:googleplay" json:"id,omitempty"`
+		Url  string `meta:"twitter:app:url:googleplay" json:"url,omitempty"`
 	}
 }
 
 type PageInfo struct {
-	Title       string `meta:"og:title"`
-	Type        string `meta:"og:type"`
-	Url         string `meta:"og:url"`
-	Site        string `meta:"og:site"`
-	SiteName    string `meta:"og:site_name"`
-	Description string `meta:"og:description"`
-	Locale      string `meta:"og:locale"`
+	Title       string `meta:"og:title" json:"title,omitempty"`
+	Type        string `meta:"og:type" json:"type,omitempty"`
+	Url         string `meta:"og:url" json:"url,omitempty"`
+	Site        string `meta:"og:site" json:"site,omitempty"`
+	SiteName    string `meta:"og:site_name" json:"siteName,omitempty"`
+	Description string `meta:"og:description" json:"description,omitempty"`
+	Locale      string `meta:"og:locale" json:"locale,omitempty"`
 	Images      []*OgImage
 	Videos      []*OgVideo
 	Audios      []*OgAudio
@@ -157,6 +157,25 @@ func GetPageInfoFromResponse(response *http.Response) (*PageInfo, error) {
 	}
 
 	err = GetPageDataFromHtml(html, &info)
+
+	if err != nil {
+		return nil, err
+	}
+
+	r, err := readability.NewDocument(string(html))
+	if err != nil {
+		return nil, err
+	}
+
+	info.Content = r.Text()
+
+	return &info, nil
+}
+
+func GetPageInfoFromHtml(html []byte) (*PageInfo, error) {
+	info := PageInfo{}
+
+	err := GetPageDataFromHtml(html, &info)
 
 	if err != nil {
 		return nil, err
