@@ -1,11 +1,11 @@
-og - An open graph parser for Golang
-========
+# og - An open graph parser for Golang
 
 This is for parsing open graph (and Twitter card) meta tags in a html page
 
 ## Data structures
 
 ### PageInfo
+
 ```go
 type PageInfo struct {
 	Title    string `meta:"og:title"`
@@ -24,6 +24,7 @@ type PageInfo struct {
 Except "Content", all fields come from og and twitter meta tags. And "Content" is readable text in this page.
 
 ### OgImage/OgVideo/OgAudio
+
 ```go
 type OgImage struct {
 	Url       string `meta:"og:image,og:image:url"`
@@ -49,6 +50,7 @@ type OgAudio struct {
 ```
 
 ### TwitterCard
+
 ```go
 type TwitterCard struct {
 	Card        string `meta:"twitter:card"`
@@ -86,6 +88,7 @@ type TwitterCard struct {
 ```
 
 ## GetPageInfo
+
 You can get page information direct from the url like this:
 
 ```go
@@ -94,6 +97,7 @@ pageInfo, e := GetPageInfoFromUrl(urlStr)
 ```
 
 ## GetPageData
+
 Another way to retrieve page related data is `GetPageData`. For example,
 if you want to get `og:image` information just do this:
 

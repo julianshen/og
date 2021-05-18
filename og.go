@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	ErrorType = errors.New("Should not be non-ptr or nil")
+	ErrorType = errors.New("should not be non-ptr or nil")
 )
 
 type OgImage struct {
@@ -93,26 +93,6 @@ type PageInfo struct {
 	Content     string
 }
 
-func GetPageDataFromUrl(urlStr string, data interface{}) error {
-	doc, err := goquery.NewDocument(urlStr)
-
-	if err != nil {
-		return err
-	}
-
-	return GetPageData(doc, data)
-}
-
-func GetPageDataFromResponse(response *http.Response, data interface{}) error {
-	doc, err := goquery.NewDocumentFromResponse(response)
-
-	if err != nil {
-		return err
-	}
-
-	return GetPageData(doc, data)
-}
-
 func GetPageDataFromHtml(html []byte, data interface{}) error {
 	buf := bytes.NewBuffer(html)
 	doc, err := goquery.NewDocumentFromReader(buf)
@@ -172,14 +152,14 @@ func GetPageInfoFromResponse(response *http.Response) (*PageInfo, error) {
 	return &info, nil
 }
 
-func GetPageInfoFromUrl(urlStr string) (*PageInfo, error) {
-	resp, err := http.Get(urlStr)
+// func GetPageInfoFromUrl(urlStr string) (*PageInfo, error) {
+// 	resp, err := http.Get(urlStr)
 
-	if err != nil {
-		return nil, err
-	}
-	return GetPageInfoFromResponse(resp)
-}
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return GetPageInfoFromResponse(resp)
+// }
 
 func getPageData(doc *goquery.Document, data interface{}) error {
 	var rv reflect.Value
